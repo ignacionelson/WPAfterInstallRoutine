@@ -1,16 +1,17 @@
 {
-    "plugins": [
-    ],
-    "results_report": [
-        {"send": 0},
-        {"to": ""}
-    ],
-    "delete_default_themes": [
-        {"twentyfifteen": ""},
-        {"twentysixteen":""}
-    ],
-    "update_wp_options": [
-        {"blogdescription": ""},
-        {"permalink_structure":"/%postname%/"}
-    ]
+    "plugins": {
+    },
+    "results_report": {
+        "send": 0,
+        "to": ""
+    },
+    "delete_default_themes": {
+        "twentyfifteen": "",
+        "twentysixteen": ""
+    },
+    "update_wp_options": {
+        "blogdescription": "",
+        "date_format":"d-m-Y",
+        "permalink_structure":"/%postname%/"
+    }
 }
