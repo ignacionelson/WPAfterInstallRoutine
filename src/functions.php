@@ -33,5 +33,8 @@ function getDump($data)
         echo "<pre>"; print_r($data); echo "</pre>";
     }
 
-    return ob_get_clean();
+    $contents = ob_get_contents();
+    ob_get_clean();
+
+    return $contents;
 }

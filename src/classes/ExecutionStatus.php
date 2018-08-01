@@ -6,9 +6,12 @@
  */
 
 namespace WPAfterInstallRoutine;
+use WPAfterInstallRoutine\MainView;
 
 class ExecutionStatus
 {
+    public $view;
+
     // Error count
     private $error_count;
     private $errors;
@@ -16,12 +19,15 @@ class ExecutionStatus
     private $warnings;
 
     // Construct
-    function __construct()
+    function __construct(MainView $view)
     {
         $this->error_count = 0;
         $this->errors = [];
         $this->status = [];
         $this->warnings = [];
+        $this->view = $view;
+
+        ob_start();
     }
 
     // Add an error to the list
@@ -37,7 +43,7 @@ class ExecutionStatus
     public function addStatus($message)
     {
         $this->status[] = $message;
-        echo self::showCurrentStatus($message);
+        //echo self::showCurrentStatus($message);
 
         return $this;
     }
@@ -56,13 +62,20 @@ class ExecutionStatus
      * @return void
      * @todo format output of messages
      * @todo save a .log file with errors, warnings and full status list
-     * @todo email results if option is set
-     * @todo SELF DELETE THE SCRIPT!
      */
     public function endScript()
     {
-        echo self::showErrors();
-        echo self::showWarnings();
+        $end_section_title = "Results";
+        $end_section_content = self::showErrors() . self::showWarnings();
+        $this->view->addSection($end_section_title, $end_section_content, "end");
+
+        echo $this->view->Render();
+        
+        $contents = ob_get_contents();
+        ob_get_clean();
+        
+        echo $contents;
+        
         $this->exit_code = ($this->error_count === 0) ? 0 : 1;
         exit($this->exit_code);
     }
@@ -73,14 +86,42 @@ class ExecutionStatus
         $this->error_count++;
     }
 
+    private function makeList($elements)
+    {
+        if ( is_cli() ) {
+            $return = "";
+            foreach ($elements as $el) {
+                $return .= $el . PHP_EOL;
+            }
+        }
+        else {
+            $return = "<ul>";
+            foreach ($elements as $el) {
+                $return .= "<li>" . $el . "</li>";
+            }
+            $return .= "</ul>";
+        }
+
+        return $return;
+    }
+
+    public function hasErrors()
+    {
+        if (count($this->errors) > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
     // Display list of errors
     private function showErrors()
     {
         if (count($this->errors) > 0) {
-            $return = sprintf("%d errors found. Listing: %d", count($this->errors), getDump($this->errors));
+            $return = sprintf("%d errors found. %s", count($this->errors), self::makeList($this->errors));
         }
         else {
-            $return = "No custom errors were logged. Everything went well!";
+            $return = "No custom errors were logged.";
         }
 
         return $return;
@@ -97,10 +138,10 @@ class ExecutionStatus
     private function showAllStatus()
     {
         if (count($this->status) > 0) {
-            $return = sprintf("%d errors found. Listing: %d", count($this->status), getDump($this->status));
+            $return = sprintf("%d status updates found. %s", count($this->status), self::makeList($this->status));
         }
         else {
-            $return = "No custom status messages were logged.";
+            $return = "No custom status updates were logged.";
         }
 
         return $return;
@@ -113,7 +154,7 @@ class ExecutionStatus
         $return = "";
 
         if (count($this->warnings) > 0) {
-            $return = sprintf("%d warnings found. Listing: %d", count($this->warnings), getDump($this->warnings));
+            $return = sprintf("%d warnings found. %s", count($this->warnings), self::makeList($this->warnings));
         }
 
         return $return;

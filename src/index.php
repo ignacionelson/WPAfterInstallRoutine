@@ -20,42 +20,35 @@ include_once './functions.php';
 include_once './classes/'.DS.'ExecutionStatus.php';
 include_once './classes/'.DS.'Tasks.php';
 include_once './classes/'.DS.'Task.php';
-$tasks_files = glob('./classes'.DS.'tasks'.DS.'*.php');
-foreach ($tasks_files as $task_file) {
-    include_once $task_file;
-}
-$status = new WPAfterInstallRoutine\ExecutionStatus();
+include_once './classes/'.DS.'MainView.php';
+$main_view = new WPAfterInstallRoutine\MainView();
+$status = new WPAfterInstallRoutine\ExecutionStatus($main_view);
 
 // Start by including the main WP file
 $wp_main_file = '../wp-load.php';
 if (!file_exists($wp_main_file))
 {
     $e = sprintf("The main WP file could not be loaded from %s", $wp_main_file);
-    $status->addError($e)->endScript();
+    $status->addError($e);
 }
 
 // Get options from the configuration file
 $config_file = 'config.json';
-if (file_exists($config_file)) {
-    $raw_options = file_get_contents($config_file);
-    $options = json_decode($raw_options);
+if (!file_exists($config_file)) {
+    $e = sprintf("The configuration file (%s) does not exist", $config_file);
+    $status->addError($e);
 }
 
-/**
- * Proposed inital tasks:
- *      - Remove "old" themes
- *      - Download and install plugins defined on the configuration file
- *      - Install plugins from the premium_plugins directory
- *      - Activate all installed plugins
- *      - Create .htaccess file if it doesn't exist. Populate with safe default information.
- *      - Update the options table with values defined on the configuration file
- *      - Set permalink structure (if in options & .htaccess was created succesfully)
- *      - Checks
- *          - If options-table->siteurl has https
- *      - E-mail execution results
- *      - Self-delete
- */
-$tasks = new WPAfterInstallRoutine\Tasks($status, $options);
+// End if the required files are not found
+if ($status->hasErrors()) {
+    $status->endScript();
+}
+
+$raw_options = file_get_contents($config_file);
+$options = json_decode($raw_options);
+
+// Load and run the tasks
+$tasks = new WPAfterInstallRoutine\Tasks($status, $main_view, $options);
 $tasks->runTasks();
 
 $status->endScript();
