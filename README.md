@@ -1,4 +1,4 @@
-# WPAfterInstallRoutine
+# WP After Install Routine
 
 ## Simple, extendable script designed to run after doing a new WordPress installation
 
@@ -52,6 +52,7 @@ Sample:
 - Create .htaccess file if it doesn't exist. Populate with safe default information. **(NYI)**
 - Update the options table with values defined on the configuration file **(NYI)**
 - Set permalink structure (if in options & .htaccess was created succesfully) **(NYI)**
+- Add new constants to wp-config.php (DISALLOW_FILE_EDIT, WP_MEMORY_LIMIT, etc) **(NYI)**
 - Checks **(NYI)**
   - If options-table->siteurl has https
 - E-mail execution results **(NYI)**
