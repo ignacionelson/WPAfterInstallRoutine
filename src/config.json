@@ -1,0 +1,16 @@
+{
+    "plugins": [
+    ],
+    "results_report": [
+        {"send": 0},
+        {"to": ""}
+    ],
+    "delete_default_themes": [
+        {"twentyfifteen": ""},
+        {"twentysixteen":""}
+    ],
+    "update_wp_options": [
+        {"blogdescription": ""},
+        {"permalink_structure":"/%postname%/"}
+    ]
+}

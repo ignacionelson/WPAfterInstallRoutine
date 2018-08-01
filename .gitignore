@@ -1,0 +1,34 @@
+# Test files
+wp-load.php
+
+# Premium plugins
+*.zip
+
+# Common ignored files after this line
+
+# Dependencies directories
+vendor
+node_modules
+npm/node_modules
+bower_components
+
+# Compiled files
+assets/dist
+
+# NPM / Yarn
+.npm
+.node_repl_history
+npm-debug.log*
+
+
+# Windows thumbnails
+Thumbs.db
+
+# macOS
+.DS_Store
+
+# Test results
+test-results
+
+# Misc
+.idea/
