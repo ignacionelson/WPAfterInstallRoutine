@@ -29,8 +29,8 @@ class Tasks
         self::loadTasksFiles();
 
         $instances = [
-            'update_wp_options' => new Tasks\UpdateOptions,
-            'delete_themes' => new Tasks\DeleteDefaultThemes,
+            'delete_themes' => new Tasks\Task\DeleteDefaultThemes,
+            'update_wp_options' => new Tasks\Task\UpdateOptions,
         ];
 
         foreach ($instances as $instance) {
@@ -57,7 +57,7 @@ class Tasks
                 $current_status = $this->status->addStatus($running_message);
                 $task_section_content .= $running_message;
 
-                if (!self::executeTask($task)) {
+                if (!self::runTask($task)) {
                     $warning = sprintf("Task not completed: %s", $task->name);
                     $this->status->addWarning($warning);
                 }
@@ -78,7 +78,7 @@ class Tasks
         }
     }
 
-    private function executeTask($task)
+    private function runTask($task)
     {
         $method = $task->executeTask();
     }

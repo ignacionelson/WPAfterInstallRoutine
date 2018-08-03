@@ -29,11 +29,9 @@ class Options
         if (empty($task_id))
             return false;
 
-        $this->get_options = $this->options->{$task_id};
-
-        if (empty($this->get_options))
+        if (empty($this->options->{$task_id}))
             return false;
         
-        return $this->get_options;
+        return $this->options->{$task_id};
     }
 }

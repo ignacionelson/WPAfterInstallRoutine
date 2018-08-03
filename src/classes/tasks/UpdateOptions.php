@@ -1,5 +1,5 @@
 <?php
-namespace WPAfterInstallRoutine\Tasks;
+namespace WPAfterInstallRoutine\Tasks\Task;
 use WPAfterInstallRoutine\Tasks\Task;
 
 class UpdateOptions extends Task {

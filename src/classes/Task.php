@@ -13,9 +13,6 @@ abstract class Task
     // Options gotten from the config file
     protected $task_options;
 
-    // Required functions from each task
-    abstract protected function executeTask();
-
     function __construct()
     {
         $this->task_options = [];
@@ -30,5 +27,18 @@ abstract class Task
     public function setTaskOptions(Options $options)
     {
         $this->task_options = $options->getOptionsByTaskId($this->id);
+    }
+
+    /**
+     * If the task is present on the config file, it can be executed
+     *
+     * @return bool
+     */
+    protected function canExecuteTask()
+    {
+        if (!$this->task_options)
+            return false;
+
+        return true;
     }
 }

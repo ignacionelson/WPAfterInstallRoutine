@@ -1,5 +1,5 @@
 <?php
-namespace WPAfterInstallRoutine\Tasks;
+namespace WPAfterInstallRoutine\Tasks\Task;
 use WPAfterInstallRoutine\Tasks\Task;
 
 class DeleteDefaultThemes extends Task {
@@ -15,8 +15,10 @@ class DeleteDefaultThemes extends Task {
 
     public function executeTask()
     {   
-        $themes = $this->task_options;
-        foreach ($themes as $theme => $unused) {
+        if (parent::canExecuteTask()) {
+            $themes = $this->task_options;
+            foreach ($themes as $theme => $unused) {
+            }
         }
     }
 }
