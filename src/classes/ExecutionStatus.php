@@ -11,6 +11,7 @@ use WPAfterInstallRoutine\MainView;
 class ExecutionStatus
 {
     public $view;
+    public $options;
 
     // Error count
     private $error_count;
@@ -28,6 +29,8 @@ class ExecutionStatus
         $this->view = $view;
 
         ob_start();
+
+        self::getRequiredFiles();
     }
 
     // Add an error to the list
@@ -80,6 +83,28 @@ class ExecutionStatus
         exit($this->exit_code);
     }
 
+    // wp-load.php and config.json
+    private function getRequiredFiles()
+    {
+        // Start by including the main WP file
+        if (!file_exists(WP_MAIN_FILE))
+        {
+            $e = sprintf("The main WP file could not be loaded from %s", WP_MAIN_FILE);
+            self::addError($e);
+        }
+
+        // Get options from the configuration file
+        if (!file_exists(CONFIG_FILE)) {
+            $e = sprintf("The configuration file (%s) does not exist", CONFIG_FILE);
+            self::addError($e);
+        }
+
+        // End if the required files are not found
+        if (self::hasErrors()) {
+            self::endScript();
+        }
+    }
+    
     // Add to the error count
     private function increaseErrorCount()
     {
@@ -91,7 +116,7 @@ class ExecutionStatus
         if ( is_cli() ) {
             $return = "";
             foreach ($elements as $el) {
-                $return .= $el . PHP_EOL;
+                $return .= "-" . $el . PHP_EOL;
             }
         }
         else {
@@ -118,10 +143,10 @@ class ExecutionStatus
     private function showErrors()
     {
         if (count($this->errors) > 0) {
-            $return = sprintf("%d errors found. %s", count($this->errors), self::makeList($this->errors));
+            $return = sprintf("%d errors found. \n %s", count($this->errors), self::makeList($this->errors));
         }
         else {
-            $return = "No custom errors were logged.";
+            $return = "No custom errors were logged. \n";
         }
 
         return $return;
@@ -138,10 +163,10 @@ class ExecutionStatus
     private function showAllStatus()
     {
         if (count($this->status) > 0) {
-            $return = sprintf("%d status updates found. %s", count($this->status), self::makeList($this->status));
+            $return = sprintf("%d status updates found. \n %s", count($this->status), self::makeList($this->status));
         }
         else {
-            $return = "No custom status updates were logged.";
+            $return = "No custom status updates were logged. \n";
         }
 
         return $return;
@@ -154,7 +179,7 @@ class ExecutionStatus
         $return = "";
 
         if (count($this->warnings) > 0) {
-            $return = sprintf("%d warnings found. %s", count($this->warnings), self::makeList($this->warnings));
+            $return = sprintf("%d warnings found. \n %s", count($this->warnings), self::makeList($this->warnings));
         }
 
         return $return;

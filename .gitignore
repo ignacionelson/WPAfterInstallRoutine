@@ -1,5 +1,8 @@
 # Test files
 wp-load.php
+wp-config.php
+.htaccess
+wp-content/*
 
 # Premium plugins
 *.zip

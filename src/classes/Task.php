@@ -1,5 +1,6 @@
 <?php
 namespace WPAfterInstallRoutine\Tasks;
+use WPAfterInstallRoutine\Options;
 
 abstract class Task
 {
@@ -9,11 +10,15 @@ abstract class Task
     // Name to show during status updates and messages
     public $name;
 
+    // Options gotten from the config file
+    protected $task_options;
+
     // Required functions from each task
     abstract protected function executeTask();
 
-    private function __construct()
-    {        
+    function __construct()
+    {
+        $this->task_options = [];
     }
 
     public function setStatusHandler($handler)
@@ -22,13 +27,8 @@ abstract class Task
     }
 
     // Get options
-    public function setTaskOptions($options)
+    public function setTaskOptions(Options $options)
     {
-        // Set the options only if they are available on the source JSON file
-        if (!empty($options->{$this->id})) {
-            $task_options = $options->{$this->id};
-        }
-
-        return $this;
+        $this->task_options = $options->getOptionsByTaskId($this->id);
     }
 }

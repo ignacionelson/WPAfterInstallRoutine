@@ -4,11 +4,12 @@ namespace WPAfterInstallRoutine;
 class Tasks
 {
     public $view;
+    public $options;
 
     private $tasks;
     
     // Construct
-    function __construct(ExecutionStatus $status, MainView $view, $options)
+    function __construct(ExecutionStatus $status, MainView $view, Options $options)
     {
         $this->status = $status;
         $this->tasks = [];
@@ -33,7 +34,7 @@ class Tasks
         ];
 
         foreach ($instances as $instance) {
-            $instance->setStatusHandler($this->status);
+//            $instance->setStatusHandler($instance->id);
             $instance->setTaskOptions($this->options);
             $this->addTask($instance);
         }

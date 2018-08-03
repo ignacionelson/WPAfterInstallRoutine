@@ -13,39 +13,33 @@
  * from the main WP folder, so wp-load.php is searched for on ../
  * 
  * @author Ignacio Nelson <info@subwaydesign.com.ar>
+ * @link https://github.com/ignacionelson/WPAfterInstallRoutine
+ * @license https://www.gnu.org/licenses/gpl.html GNU GPL version 3
  */
+
+error_reporting(E_ALL);
+
+/**
+ * Set time limit to 10 minutes. There's no need to set it at 0 and keep it
+ * running until the next Big Bang if something fails
+ */
+set_time_limit(600);
+
+define('ROOT', __DIR__);
 define('DS', DIRECTORY_SEPARATOR);
+define('WP_MAIN_FILE', dirname(ROOT).DS."wp-load.php");
+define('CONFIG_FILE', ROOT.DS."config.json");
+define('VIEWS_DIR', ROOT.DS."views");
 
-include_once './functions.php';
-include_once './classes/'.DS.'ExecutionStatus.php';
-include_once './classes/'.DS.'Tasks.php';
-include_once './classes/'.DS.'Task.php';
-include_once './classes/'.DS.'MainView.php';
+include_once ROOT.DS.'functions.php';
+include_once ROOT.DS.'classes/'.DS.'ExecutionStatus.php';
+include_once ROOT.DS.'classes/'.DS.'Options.php';
+include_once ROOT.DS.'classes/'.DS.'Tasks.php';
+include_once ROOT.DS.'classes/'.DS.'Task.php';
+include_once ROOT.DS.'classes/'.DS.'MainView.php';
 $main_view = new WPAfterInstallRoutine\MainView();
+$options = new WPAfterInstallRoutine\Options();
 $status = new WPAfterInstallRoutine\ExecutionStatus($main_view);
-
-// Start by including the main WP file
-$wp_main_file = '../wp-load.php';
-if (!file_exists($wp_main_file))
-{
-    $e = sprintf("The main WP file could not be loaded from %s", $wp_main_file);
-    $status->addError($e);
-}
-
-// Get options from the configuration file
-$config_file = 'config.json';
-if (!file_exists($config_file)) {
-    $e = sprintf("The configuration file (%s) does not exist", $config_file);
-    $status->addError($e);
-}
-
-// End if the required files are not found
-if ($status->hasErrors()) {
-    $status->endScript();
-}
-
-$raw_options = file_get_contents($config_file);
-$options = json_decode($raw_options);
 
 // Load and run the tasks
 $tasks = new WPAfterInstallRoutine\Tasks($status, $main_view, $options);

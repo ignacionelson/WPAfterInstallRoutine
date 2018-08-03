@@ -3,11 +3,12 @@ namespace WPAfterInstallRoutine\Tasks;
 use WPAfterInstallRoutine\Tasks\Task;
 
 class UpdateOptions extends Task {
-    public $id;
-    public $name;
 
+    // Construct from parent Task
     function __construct()
     {
+        parent::__construct();
+        
         $this->id = "update_wp_options";
         $this->name = "Update database options";
     }
