@@ -2,11 +2,10 @@
 /**
  * HTML output for browsers
  * 
- * @todo add system checks (memory_limit, etc)
+ * @todo add alt for console
  */
 
 namespace WPAfterInstallRoutine;
-use  Tidy;
 
 class MainView
 {
@@ -24,10 +23,10 @@ class MainView
 
     function __construct()
     {
-        $this->template = file_get_contents("./views/template.php");
+        $this->template = file_get_contents(VIEWS_DIR.DS."template.php");
         $this->template = self::setValue("{script_name}", "WordPress: After install routine", $this->template);
 
-        $this->template_section = file_get_contents("./views/section.php");
+        $this->template_section = file_get_contents(VIEWS_DIR.DS."section.php");
 
         $this->main_content = "";
     }
@@ -52,12 +51,10 @@ class MainView
             return;
 
         if (!is_array($contents))
-        {
             $contents = [$contents];
-        }
 
         foreach ($contents as $content) {
-            $this->main_content .= $content ."\n";
+            $this->main_content .= $content ."\r\n";
         }
     }
 
