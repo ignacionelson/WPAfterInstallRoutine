@@ -53,8 +53,7 @@ Sample:
 - Update the options table with values defined on the configuration file **(NYI)**
 - Set permalink structure (if in options & .htaccess was created succesfully) **(NYI)**
 - Add new constants to wp-config.php (DISALLOW_FILE_EDIT, WP_MEMORY_LIMIT, etc) **(NYI)**
-- Checks **(NYI)**
-  - If options-table->siteurl has https
+- Checks (Current php version, site uses https, etc) **(NYI)**
 - E-mail execution results **(NYI)**
 - Self-delete **(NYI)**
 
